@@ -183,6 +183,21 @@ void RenderUI(std::vector<RespawnWatch>& respawnWatches, bool* p_open) {
 			}
 		}
 
+		ImGui::SameLine(ImGui::GetWindowWidth() - 30);
+		disableButton = respawnWatches.size() == 0;
+		if (disableButton) {
+			ImGui::BeginDisabled();
+		}
+
+		if (ImGui::SmallButton(ICON_MD_DELETE))
+		{
+			respawnWatches.clear();
+		}
+
+		if (disableButton) {
+			ImGui::EndDisabled();
+		}
+
 		ImGui::Separator();
 
 		if (ImGui::BeginTable("##WatchList", 5, ImGuiTableFlags_ScrollY | ImGuiTableFlags_Resizable | ImGuiTableFlags_Hideable))
