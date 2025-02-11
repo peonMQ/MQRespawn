@@ -102,7 +102,10 @@ PLUGIN_API void SetGameState(int GameState)
 {
 	if (GameState != GAMESTATE_INGAME)
 	{
-		m_respawn_watches.clear();
+		if (m_respawn_watches.size() > 0) {
+			m_respawn_watches.clear();
+			WriteChatf("\ag[MQRespawn]\ax not ingame -> clearing watch list.");
+		}
 	}
 }
 
@@ -148,7 +151,10 @@ PLUGIN_API void OnRemoveSpawn(PlayerClient* pSpawn)
 
 PLUGIN_API void OnBeginZone()
 {
-	m_respawn_watches.clear();
+	if (m_respawn_watches.size() > 0) {
+		m_respawn_watches.clear();
+		WriteChatf("\ag[MQRespawn]\ax zoned -> clearing watch list.", positionSlack);
+	}
 }
 
 PLUGIN_API void OnUpdateImGui()
