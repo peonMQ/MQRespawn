@@ -22,8 +22,8 @@ PLUGIN_VERSION(0.1);
  */
 static bool ShowMQRespawnWindow = true;
 
-std::vector<RespawnWatch> RespawnWatches;
-u_int positionSlack = 5;
+std::vector<RespawnWatch> m_respawn_watches;
+u_int m_position_slack = 5;
 
 std::string CreateTimeStamp(std::chrono::system_clock::time_point time_point)
 {
@@ -42,9 +42,9 @@ static bool IsBetween(const double p, const double v1, const double v2) {
 }
 
 static bool IsInVisinityOf(const CVector3& vec1, const CVector3& vec2) {
-	return IsBetween(vec1.X, vec2.X + positionSlack, vec2.X - positionSlack)
-		&& IsBetween(vec1.Y, vec2.Y + positionSlack, vec2.Y - positionSlack)
-		&& IsBetween(vec1.Z, vec2.Z + positionSlack, vec2.Z - positionSlack)
+	return IsBetween(vec1.X, vec2.X + m_position_slack, vec2.X - m_position_slack)
+		&& IsBetween(vec1.Y, vec2.Y + m_position_slack, vec2.Y - m_position_slack)
+		&& IsBetween(vec1.Z, vec2.Z + m_position_slack, vec2.Z - m_position_slack)
 		;
 }
 
@@ -65,15 +65,15 @@ static void HandleCommand(PlayerClient* pChar, PCHAR szLine)
 		ShowMQRespawnWindow = true;
 	}
 	else if (ci_equals(szArg1, "slack")) {
-		positionSlack = GetUIntFromString(GetArg(szArg1, szLine, 2), 0);
-		WriteChatf("\ag[MQRespawn]\ax slack in pixels is now \at%i\ax", positionSlack);
+		m_position_slack = GetUIntFromString(GetArg(szArg1, szLine, 2), 0);
+		WriteChatf("\ag[MQRespawn]\ax slack in pixels is now \at%i\ax", m_position_slack);
 	}
 }
 
 void AddTargetToWatchList(ForeignPointer<PlayerClient> pTarget) {
 	if (pTarget) {
 		auto position = CVector3{ pTarget->X, pTarget->Y, pTarget->Z };
-		if (!any_of(RespawnWatches.begin(), RespawnWatches.end(), [position](RespawnWatch respawnTimerWatch) { return  IsInVisinityOf(respawnTimerWatch.spawnPoint, position); })) {
+		if (!any_of(m_respawn_watches.begin(), m_respawn_watches.end(), [position](RespawnWatch respawnTimerWatch) { return  IsInVisinityOf(respawnTimerWatch.spawnPoint, position); })) {
 			RespawnWatch newWatch;
 			newWatch.spawnPoint = position;
 			newWatch.spawnTime = std::chrono::system_clock::now();
@@ -81,7 +81,7 @@ void AddTargetToWatchList(ForeignPointer<PlayerClient> pTarget) {
 			newWatch.previousSpawnName = spawnName;
 			newWatch.spawnNames[spawnName] = 1;
 			newWatch.currentSpawn = GetSpawnByID(pTarget->SpawnID);
-			RespawnWatches.push_back(newWatch);
+			m_respawn_watches.push_back(newWatch);
 		}
 	}
 }
@@ -102,13 +102,13 @@ PLUGIN_API void SetGameState(int GameState)
 {
 	if (GameState != GAMESTATE_INGAME)
 	{
-		RespawnWatches.clear();
+		m_respawn_watches.clear();
 	}
 }
 
 PLUGIN_API void OnPulse()
 {
-	for (auto& watch : RespawnWatches)
+	for (auto& watch : m_respawn_watches)
 	{
 		if (watch.currentSpawn && watch.currentSpawn->Type == SPAWN_CORPSE && !watch.timeOfDeath.has_value()) {
 			watch.timeOfDeath = std::chrono::system_clock::now();
@@ -120,7 +120,7 @@ PLUGIN_API void OnPulse()
 PLUGIN_API void OnAddSpawn(PlayerClient* pNewSpawn)
 {
 	auto position = CVector3{ pNewSpawn->X, pNewSpawn->Y, pNewSpawn->Z };
-	for (auto& watch : RespawnWatches)
+	for (auto& watch : m_respawn_watches)
 	{
 		if (IsInVisinityOf(watch.spawnPoint, position)) {
 			auto diff = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - watch.timeOfDeath.value());
@@ -138,7 +138,7 @@ PLUGIN_API void OnAddSpawn(PlayerClient* pNewSpawn)
 
 PLUGIN_API void OnRemoveSpawn(PlayerClient* pSpawn)
 {
-	for (auto& watch : RespawnWatches)
+	for (auto& watch : m_respawn_watches)
 	{
 		if (watch.currentSpawn == pSpawn) {
 			watch.currentSpawn = nullptr;
@@ -148,7 +148,7 @@ PLUGIN_API void OnRemoveSpawn(PlayerClient* pSpawn)
 
 PLUGIN_API void OnBeginZone()
 {
-	RespawnWatches.clear();
+	m_respawn_watches.clear();
 }
 
 PLUGIN_API void OnUpdateImGui()
@@ -156,7 +156,7 @@ PLUGIN_API void OnUpdateImGui()
 	if (GetGameState() == GAMESTATE_INGAME)
 	{
 		if (ShowMQRespawnWindow) {
-			RenderUI(RespawnWatches, &ShowMQRespawnWindow);
+			RenderUI(m_respawn_watches, &ShowMQRespawnWindow);
 		}
 	}
 }
