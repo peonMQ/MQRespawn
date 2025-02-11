@@ -47,13 +47,14 @@ static void RenderSpawnHelpMarker(const std::unordered_map<std::string, u_int>& 
 	}
 }
 
-static void RenderHelpMarker(const char* desc)
+template <class ... Args>
+static void RenderHelpMarker(const char* fmt, Args ... args)
 {
 	ImGui::TextDisabled("(?)");
 	if (ImGui::BeginItemTooltip())
 	{
 		ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-		ImGui::TextUnformatted(desc);
+		ImGui::Text(fmt, args...);
 		ImGui::PopTextWrapPos();
 		ImGui::EndTooltip();
 	}
@@ -148,14 +149,12 @@ static void RenderTimeOfDeathColumn(std::vector<RespawnWatch>::iterator& it_watc
 	ImGui::SameLine();
 	if (it_watch->respawnTimer.has_value()) {
 		auto [minutes, seconds] = ToMinutesAndSeconds(it_watch->respawnTimer.value());
-		char buf[32];
 		if (minutes > 0) {
-			sprintf_s(buf, "Respawn timer: %im %is", minutes, seconds);
+			RenderHelpMarker("Respawn timer: %im %is", minutes, seconds);
 		}
 		else {
-			sprintf_s(buf, "Respawn timer: %is", seconds);
+			RenderHelpMarker("Respawn timer: %is", seconds);
 		}
-		RenderHelpMarker(buf);
 	}
 }
 
@@ -180,10 +179,8 @@ void RenderUI(std::vector<RespawnWatch>& respawnWatches, bool* p_open) {
 			if (pTarget->SpawnID) {
 				ImGui::SameLine();
 				ImGui::Text("%s", pTarget->DisplayedName);
-				char buf[32];
-				sprintf_s(buf, "x: %.3f  y: %.3f  z: %.3f", pTarget->X, pTarget->Y, pTarget->Z);
 				ImGui::SameLine();
-				RenderHelpMarker(buf);
+				RenderHelpMarker("x: %.3f  y: %.3f  z: %.3f", pTarget->X, pTarget->Y, pTarget->Z);
 			}
 		}
 
