@@ -180,7 +180,7 @@ void RenderUI(std::vector<RespawnWatch>& respawnWatches, bool* p_open) {
 			if (pTarget->SpawnID) {
 				ImGui::SameLine();
 				ImGui::Text("%s", pTarget->DisplayedName);
-				char buf[32];
+				char buf[50];
 				sprintf_s(buf, "x: %.3f  y: %.3f  z: %.3f", pTarget->X, pTarget->Y, pTarget->Z);
 				ImGui::SameLine();
 				RenderHelpMarker(buf);
