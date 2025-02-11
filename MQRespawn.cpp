@@ -153,7 +153,7 @@ PLUGIN_API void OnBeginZone()
 {
 	if (m_respawn_watches.size() > 0) {
 		m_respawn_watches.clear();
-		WriteChatf("\ag[MQRespawn]\ax zoned -> clearing watch list.", positionSlack);
+		WriteChatf("\ag[MQRespawn]\ax zoned -> clearing watch list.", m_position_slack);
 	}
 }
 
