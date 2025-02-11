@@ -167,7 +167,7 @@ void RenderUI(std::vector<RespawnWatch>& respawnWatches, bool* p_open) {
 			ImGui::BeginDisabled();
 		}
 
-		if (ImGui::SmallButton("Add watch"))
+		if (ImGui::SmallButton(ICON_MD_ADD))
 		{
 			AddTargetToWatchList(pTarget);
 		}
@@ -179,7 +179,11 @@ void RenderUI(std::vector<RespawnWatch>& respawnWatches, bool* p_open) {
 		if (pTarget) {
 			if (pTarget->SpawnID) {
 				ImGui::SameLine();
-				ImGui::Text("%s (%.3f, %.3f, %.3f)", pTarget->DisplayedName, pTarget->X, pTarget->Y, pTarget->Z);
+				ImGui::Text("%s", pTarget->DisplayedName);
+				char buf[32];
+				sprintf_s(buf, "x: %.3f  y: %.3f  z: %.3f", pTarget->X, pTarget->Y, pTarget->Z);
+				ImGui::SameLine();
+				RenderHelpMarker(buf);
 			}
 		}
 
