@@ -29,9 +29,8 @@ Describe the commands available and how to use them.
 
 * **ProjectEon** - *Initial work*
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
-
 ## Acknowledgments
 
 * Inspiration from respawn timers done in [MQ2CastTimer](https://gitlab.com/redguides/VeryVanilla/-/tree/master/MQ2Casttimer?ref_type=heads)
+
 
