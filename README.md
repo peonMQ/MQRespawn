@@ -33,4 +33,5 @@ See also the list of [contributors](https://github.com/your/project/contributors
 
 ## Acknowledgments
 
-* Inspiration from respawn timers done in MQ2CastTimer
+* Inspiration from respawn timers done in [MQ2CastTimer](https://gitlab.com/redguides/VeryVanilla/-/tree/master/MQ2Casttimer?ref_type=heads)
+
