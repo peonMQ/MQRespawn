@@ -13,4 +13,4 @@ struct RespawnWatch {
 };
 
 std::string CreateTimeStamp(std::chrono::system_clock::time_point time_point);
-void AddTargetToWatchList(ForeignPointer<PlayerClient> pTarget);
+void AddTargetToWatchList(PlayerClient* pTarget);

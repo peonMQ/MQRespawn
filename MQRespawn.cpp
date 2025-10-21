@@ -70,7 +70,7 @@ static void HandleCommand(PlayerClient* pChar, PCHAR szLine)
 	}
 }
 
-void AddTargetToWatchList(ForeignPointer<PlayerClient> pTarget) {
+void AddTargetToWatchList(PlayerClient* pTarget) {
 	if (pTarget) {
 		auto position = CVector3{ pTarget->X, pTarget->Y, pTarget->Z };
 		if (!any_of(m_respawn_watches.begin(), m_respawn_watches.end(), [position](RespawnWatch respawnTimerWatch) { return  IsInVisinityOf(respawnTimerWatch.spawnPoint, position); })) {
