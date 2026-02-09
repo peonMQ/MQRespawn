@@ -211,8 +211,8 @@ void RenderUI(std::vector<RespawnWatch>& respawnWatches, bool* p_open) {
 			ImGui::TableSetupScrollFreeze(0, 1);
 			ImGui::TableHeadersRow();
 
-
-			for (auto& it_watch = respawnWatches.begin(); it_watch != respawnWatches.end();)
+			auto it_watch = respawnWatches.begin();
+			while (it_watch != respawnWatches.end())
 			{
 				ImGui::TableNextRow();
 
@@ -236,7 +236,7 @@ void RenderUI(std::vector<RespawnWatch>& respawnWatches, bool* p_open) {
 					it_watch = respawnWatches.erase(it_watch);
 				}
 				else {
-					it_watch++;
+					++it_watch;
 				}
 			}
 
