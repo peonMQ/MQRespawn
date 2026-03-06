@@ -231,6 +231,7 @@ void RenderUI(std::vector<RespawnWatch>& respawnWatches, bool* p_open) {
 				RenderTimeOfDeathColumn(it_watch);
 
 				ImGui::TableNextColumn();
+				ImGui::PushID(&it_watch->spawnPoint);
 				if (ImGui::SmallButton(ICON_MD_DELETE))
 				{
 					it_watch = respawnWatches.erase(it_watch);
@@ -238,6 +239,7 @@ void RenderUI(std::vector<RespawnWatch>& respawnWatches, bool* p_open) {
 				else {
 					++it_watch;
 				}
+				ImGui::PopID();
 			}
 
 			ImGui::EndTable();
